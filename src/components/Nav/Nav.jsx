@@ -4,8 +4,6 @@ import logo from '../../images/Soox.svg';
 import { Row, Col, Button, Input, Icon } from 'antd'
 import './Nav.css'
 
-import Login from '../Login'
-
 const Nav = (props) => {
     return (
         <Row type='flex' justify="space-between">
