@@ -6,9 +6,6 @@ const Login = (props) => {
 
 	const [Visible, setVisible] = useState(false)
 
-	if(props.show) {
-		setVisible(true)
-	}
 
 	return (
 		<div>
