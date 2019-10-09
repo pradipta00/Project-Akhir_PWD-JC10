@@ -1,3 +1,7 @@
 ::-webkit-scrollbar { 
     display: none; 
 }
+
+.ant-modal-content {
+    border-radius: 1px;
+}

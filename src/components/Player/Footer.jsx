@@ -92,14 +92,14 @@ class Footer extends React.Component {
 
             <Row type="flex" justify='center' className='Main-Player my-auto'>
                 <Col span={1}>
-                    <img src="http://localhost:8080/thumbnail/images.jpg" style={{ width : '80%' }} />
+                    <img src="http://localhost:8080/thumbnail/images.jpg" alt="" style={{ width : '80%' }} />
                 </Col>
                 
                 <Col span={2}>
-                    <a className="overflow-text">
+                    <a className="overflow-text" href="#">
                         Happier (Azetto Remix) Ft. Martin Garrix
                     </a>
-                    <a className="overflow-text">
+                    <a className="overflow-text" href="#">
                         Ed Sheeran
                     </a>
                 </Col>
