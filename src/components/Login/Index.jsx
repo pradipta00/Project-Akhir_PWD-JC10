@@ -5,6 +5,7 @@ import { Modal } from "antd";
 const Login = (props) => {
 
 	const [Visible, setVisible] = useState(false)
+	const [Visible2, setVisible2] = useState(false)
 
 	if(props.show) {
 		setVisible(true)
