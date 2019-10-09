@@ -1,0 +1,22 @@
+/* Simplified */
+.d-flex { display : flex }
+.j-cont-r {justify-content: end}
+.j-cont-sa {justify-content: space-between}
+.ac-c {align-content: center}
+.ai-c {align-items: center}
+
+.Logo {
+    max-width: 50%;
+    height: auto;
+    display: inline-block
+}
+
+.input-1 {
+    height : 65%;
+    border-radius: 0px;
+}
+
+.burger {
+    font-size: 2em;
+    display: inline-block
+}
