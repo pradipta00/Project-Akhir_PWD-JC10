@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-import { Modal, Input, Icon, Row, Col } from "antd";
+import { Modal, Input, Icon, Row, Col, Tooltip } from "antd";
 
 const Register = props => {
 
@@ -29,9 +29,9 @@ const Register = props => {
                     <Input type="text" placeholder="Last name" value={Lastname} onChange={_ => setLastname(_.target.value)} />
 				</Col>
 			</Row>
-            <Input type="text" placeholder="Username" value={Username} onChange={_ => setUsername(_.target.value)} prefix={ <Icon type='user' /> }  style={{marginBottom : '1rem', marginTop : '1rem'}} />
+            <Input type="text" placeholder="Username" value={Username} onChange={_ => setUsername(_.target.value)} prefix={ <Icon type='user' /> } suffix={ <Tooltip title="Username can only be letters, numbers, or _ ! @ #"><Icon type="info-circle"/></Tooltip> } style={{marginBottom : '1rem', marginTop : '1rem'}} />
             <Input type="email" placeholder="Email" value={Email} onChange={_=>setEmail(_.target.value)} prefix={ <Icon type='mail'/> } />
-            <Input type="password" placeholder="Password" value={Password} onChange={_=>setPassword(_.target.value)}  prefix={ <Icon type='lock' /> } style={{marginBottom : '1rem', marginTop : '1rem'}} />
+            <Input type="password" placeholder="Password" value={Password} onChange={_=>setPassword(_.target.value)}  prefix={ <Icon type='lock' /> } suffix={ <Tooltip title="Password must be at minimum 8 letters"><Icon type="info-circle"/></Tooltip> } style={{marginBottom : '1rem', marginTop : '1rem'}} />
 		</Modal>
     )
 }

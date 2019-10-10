@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import Nav from '../components/Nav/Nav'
 import Side from '../components/Sidebar/Side'
 import Footer from '../components/Player/Footer'
+import Banner from '../components/Banner'
 
 import { Layout } from 'antd'
 const { Header, Sider, Content } = Layout
@@ -25,8 +26,8 @@ const GuestLanding = () => {
                 <Sider collapsible collapsed={sideCol} style={{overflow: 'auto', scrollbarWidth : 'none'}} trigger={null}>
                     <Side />
                 </Sider>
-                <Content style={{backgroundColor : '#232323'}}>
-                    <h1>INI CONTENT</h1>
+                <Content style={{backgroundColor : '#232323', paddingTop : '10px', paddingBottom : '10px'}}>
+                    <Banner />
                 </Content>
             </Layout>
             <Layout.Footer>
