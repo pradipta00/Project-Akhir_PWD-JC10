@@ -1,22 +1,37 @@
 import React from 'react'
 
-import { Carousel } from 'antd'
+import { Carousel, Icon } from 'antd'
 
 const Banner = () => {
 
-    let StyleImg = { minWidth : '100%' }
-    let Overlay = { position : 'absolute', fontFamily : "Poppins, sans-serif", color : '#101010' }
     let link = 'http://localhost:8080/banner/'
 
     return (
-        <Carousel autoplay style={{height : "250px", backgroundColor : "#4A5FFF"}} >
+        <Carousel autoplay style={{height : "250px"}} >
             <div>
-                <img src={link + "banner1.jpg"} style={{...StyleImg , marginTop : '440px'}} alt=""/>
-                <p className='asal' style={{...Overlay , top : '160px', fontSize : "1.5rem"}} >Summer Days</p>
-                <p className='asal' style={{...Overlay , top : '190px', fontSize : "1.3rem"}} >Martin Garrix</p>
+                <div className="image-container">
+                    <img src={link + "Untitled-1.png"} alt="" />
+                    <div className="overlay">
+                        <Icon type="play-circle" className='button-foot' onClick={_ => alert("ASHIAP1")} style={{fontSize : "3rem"}} />
+                    </div>
+                </div>
             </div>
-            <div> TITLE3 </div>
-            <div> TITLE </div>
+            <div>
+                <div className="image-container">
+                    <img src={link + "Untitled-1.png"} alt="" />
+                    <div className="overlay">
+                        <Icon type="play-circle" className='button-foot' onClick={_ => alert("ASHIAP2")} style={{fontSize : "3rem"}} />
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div className="image-container">
+                    <img src={link + "Untitled-1.png"} alt="" />
+                    <div className="overlay">
+                        <Icon type="play-circle" className='button-foot' onClick={_ => alert("ASHIAP3")} style={{fontSize : "3rem"}} />
+                    </div>
+                </div>
+            </div>
         </Carousel>
     )
 }

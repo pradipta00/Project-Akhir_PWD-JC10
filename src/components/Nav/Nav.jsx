@@ -31,7 +31,7 @@ const Nav = (props) => {
                 </Col>
             </Row>
             <Login show={ShowLogin} dismiss={_=>setShowLogin(0)} />
-            <Register show={ShowRegister} dismiss={_=>setShowRegister(0)} />
+            <Register show={ShowRegister} dismiss={_=>setShowRegister(0)} success={_=>setShowLogin(1)}/>
         </div>
     )
 }
