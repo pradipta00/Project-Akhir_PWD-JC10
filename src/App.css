@@ -1,5 +1,8 @@
 @import url('https://fonts.googleapis.com/css?family=Poppins:600&display=swap');
 
+.mt-1 { margin-top: 1rem }
+.mb-1 { margin-bottom: 1rem }
+
 .ant-layout-sider-trigger {
 display : none;
 }
@@ -42,5 +45,4 @@ padding-left : 10px !important;
     left : 47.5%;
     opacity: 0;
     transition: .5s ease;
-
 }

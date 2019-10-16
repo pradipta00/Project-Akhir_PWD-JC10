@@ -5,9 +5,7 @@ const Register = data => {
 
     const promise = new Promise( (resolve, reject) => {
         axios.post(link + 'register', data)
-        .then( res => {
-            if(res.data.success){ resolve(res.data) }else { resolve(res.data) }
-        })
+        .then( res => resolve(res.data) )
         .catch( err => reject(err) )
     });
 
@@ -15,4 +13,15 @@ const Register = data => {
     
 }
 
-export { Register }
+const Login = data => {
+
+    console.log(data)
+
+    return new Promise( (resolve , reject) => {
+        axios.post(link + 'login', data)
+        .then(res => resolve(res.data) )
+        .catch(err => reject(err))
+    })
+}
+
+export { Register, Login }
