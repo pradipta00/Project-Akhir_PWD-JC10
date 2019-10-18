@@ -2,26 +2,35 @@ const axios = require('axios');
 const link = 'http://localhost:8080/'
 
 const Register = data => {
-
-    const promise = new Promise( (resolve, reject) => {
+    return new Promise( (resolve, reject) => {
         axios.post(link + 'register', data)
         .then( res => resolve(res.data) )
         .catch( err => reject(err) )
-    });
-
-    return promise;
-    
+    });    
 }
 
 const Login = data => {
-
-    console.log(data)
-
-    return new Promise( (resolve , reject) => {
+   return new Promise( (resolve , reject) => {
         axios.post(link + 'login', data)
         .then(res => resolve(res.data) )
         .catch(err => reject(err))
     })
 }
 
-export { Register, Login }
+const getToken = data => {
+    return new Promise( (resolve, reject) => {
+        axios.post( link+'gettoken' , data )
+        .then( res => resolve(res) )
+        .catch( err => reject(err) )
+    })
+}
+
+const verifyToken = data => {
+    return new Promise( (resolve, reject) => {
+        axios.post( link+'verifytoken' , null, { headers : { Authorization : data } } )
+        .then( res => resolve(res) )
+        .catch( err => reject(err) )
+    })
+}
+
+export { Register, Login, getToken, verifyToken }

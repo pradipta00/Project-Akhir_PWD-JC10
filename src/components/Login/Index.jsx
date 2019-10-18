@@ -1,22 +1,28 @@
 import React, { useState, useContext } from "react";
-import { Modal, Input, Icon, Row, Col, message } from "antd";
-import { Login as Masuk } from '../../services'
+
+import { Login as Masuk, getToken } from '../../services'
 import GlobalState from '../../context'
+import { Cookies } from 'react-cookie'
+
+import { Modal, Input, Icon, Row, Col, message } from "antd";
 
 const Login = (props) => {
 
-	const [username, setUsername] = useState(null)
-	const [password, setPassword] = useState(null)
+	const [Username, setUsername] = useState(null)
+	const [Password, setPassword] = useState(null)
 
-	const newUser = useContext(GlobalState);
-	const User = useContext(GlobalState);
+	const { setUser } = useContext(GlobalState);
 
 	let LogIn = _ => {
-		console.log(User)
-		Masuk({username, password})
+		Masuk({Username, Password})
 		.then( res => {
 			if(res.logged){
-				newUser(res)
+				getToken(res).then( res => {
+					let cookie = new Cookies();
+					cookie.set('auth', res.data , { path : '/' })
+				}).catch( err => console.log('Error get token => ' + err) )
+				setUser(res)
+				message.success('Successfully Logged!')
 			}else{
 				message.error('Username/Password invalid')
 			}
@@ -35,8 +41,8 @@ const Login = (props) => {
 		>
 			<Row>
 				<Col span={16} offset={4}>
-					<Input type="text" placeholder="Username / Email" value={username} onChange={_=>setUsername(_.target.value)}  prefix={ <Icon type='user' /> } style={{marginBottom : '1rem'}} />
-					<Input type="password" placeholder="Password" value={password} onChange={_=>setPassword(_.target.value)}  prefix={ <Icon type='lock' /> } />
+					<Input type="text" placeholder="Username / Email" value={Username} onChange={_=>setUsername(_.target.value)}  prefix={ <Icon type='user' /> } style={{marginBottom : '1rem'}} />
+					<Input type="password" placeholder="Password" value={Password} onChange={_=>setPassword(_.target.value)}  prefix={ <Icon type='lock' /> } />
 				</Col>
 			</Row>
 		</Modal>

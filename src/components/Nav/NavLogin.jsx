@@ -1,12 +1,20 @@
-import React, { useState } from 'react'
-
+import React, { useContext } from 'react'
+import { Cookies } from 'react-cookie'
 import logo from '../../images/Soox.svg';
 import { Row, Col, Button, Input, Icon } from 'antd'
+import GlobalState from '../../context'
+
 import './Nav.css'
 
-const Nav = (props) => {
+const NavLogin = (props) => {
 
-    let logout = _ => (null);
+    const { setUser } = useContext(GlobalState)
+    const cookie = new Cookies();
+    
+    let logout = _ => {
+        cookie.remove('auth')
+        setUser(false)
+    }
 
     return (
         <div>
@@ -19,7 +27,7 @@ const Nav = (props) => {
                 </Col>
                 <Col span={6} >
                     <Input suffix={<Icon type="search" />}
-                        type="text" placeholder="Cari seleramu" className="input-1" />
+                        type="text" placeholder="Find your music" className="input-1" />
                 </Col>
                 <Col span={4} className="d-flex j-cont-r ai-c">
                     <Button type="primary" onClick={logout} > Log out </Button>
@@ -29,4 +37,4 @@ const Nav = (props) => {
     )
 }
 
-export default Nav
+export default NavLogin

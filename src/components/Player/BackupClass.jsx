@@ -1,7 +1,7 @@
-import React, { useState, useRef, useEffect } from 'react'
+import React from 'react'
 import './Footer.css'
 
-import { Row, Col, Icon, Slider, Button } from 'antd'
+import { Row, Col, Icon, Slider } from 'antd'
 import ReactHowler from 'react-howler';
 
 const noVolumeSVG = _ => <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume-off" className="svg-inline--fa fa-volume-off fa-w-8" style={{width : '100%'}} role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M215 71l-89 89H24a24 24 0 0 0-24 24v144a24 24 0 0 0 24 24h102.06L215 441c15 15 41 4.47 41-17V88c0-21.47-26-32-41-17z"></path></svg>
@@ -12,69 +12,82 @@ const NoVolume = props => <Icon {...props} component={noVolumeSVG} />
 const FullVolume = props => <Icon {...props} component={fullVolumeSVG} />
 const HalfVolume = props => <Icon {...props} component={halfVolumeSVG} />
 
-const Footer = props => {
+class Player extends React.Component {
 
-    const [Playlist, setPlaylist] = useState(["http://localhost:8080/music/music.mp3",'https://goldfirestudios.com/proj/howlerjs/sound.ogg'])
-    const [TotalDuration, setTotalDuration] = useState(0)
-    const [Duration, setDuration] = useState(0)
-    const [Volume, setVolume] = useState(0)
-    const [Playing, setPlaying] = useState(false)
-    const [Current, setCurrent] = useState(0)
-
-    let Player = useRef()
-    var interval;
-
-    useEffect(_ => {
-        interval = setInterval( _ => {
-            if(Duration < TotalDuration && Playing) setDuration( prev => prev + 1 );
-            console.log(Duration + ' => ' + TotalDuration + ' => ' + Playing)
-        } , 1000)
-    }, [])
+    state = {
+        playlist : ["http://localhost:8080/music/music.mp3",'https://goldfirestudios.com/proj/howlerjs/sound.ogg'],
+        currTrack : 0,
+        playing : false,
+        totalDuration : 0,
+        nowDuration : 0,
+        volume : 1,
+    }
     
-    let timestamp = (time) => {
+    timestamp = (time) => {
         var mins = "0" + ~~(time / 60)
         var second = "0" + (time - (mins * 60))
         return `${mins.slice(-2)}:${second.slice(-2)}`
     }
     
-    let onPlay = _ => setTotalDuration( Math.floor(Player.current.duration()) )
+    onPlay = () => {
+        console.log('onplay kepanggil')
+        this.setState({ totalDuration : Math.floor(this.refs.player.duration())})
+    }
 
-    let setSeek = (val) => { setDuration(val); Player.current.seek(val) }
+    onLoad = () => {
+        this.interval = setInterval( _ => {
+            if(this.state.nowDuration < this.state.totalDuration && this.state.playing){
+                this.setState({ nowDuration : this.state.nowDuration+1 })
+            }
+        } , 1000)
+    }
 
-    let rewind = () => {
-        if(Duration > 3) {
-            setSeek(0)
+    setSeek = (val) => {
+        this.setState({nowDuration : val})
+        this.refs.player.seek(val)
+    }
+
+    setVolume = val => {
+        this.setState({volume : val})
+    }
+
+    rewind = () => {
+        if(this.state.nowDuration > 3) {
+            this.setSeek(0)
         } else {
-            if(Current > 0){
-                setCurrent( Current - 1 )
-                setDuration( 0 )
-                clearInterval(interval)
-            }else { setSeek(0) }
+            if(this.state.currTrack > 0){
+                this.setState({currTrack : this.state.currTrack-1})
+                this.setState({nowDuration : 0})
+                clearInterval(this.interval)
+            }else { this.setSeek(0) }
         }
     }
 
-    let next = () => {
-        if(Current < Playlist.length - 1) {
-            setCurrent( Current + 1 )
+    next = () => {
+        if(this.state.currTrack < this.state.playlist.length - 1) {
+            this.setState({currTrack : this.state.currTrack+1})
         }else {
-            setCurrent(0)
+            this.setState({ currTrack : 0 })
         }
-        setDuration(0)
-        clearInterval(interval)
+            this.setState({nowDuration : 0})
+            clearInterval(this.interval)
     }
 
-    let pause = () => setPlaying(!Playing)
+    pause = () => this.setState({playing : !this.state.playing})
 
+
+    render(){
     return (
         <div>
             <ReactHowler 
-                src={Playlist[Current]}
-                playing={Playing}
-                ref={Player}
-                onPlay={onPlay}
+                src={this.state.playlist[this.state.currTrack]}
+                playing={this.state.playing}
+                ref={'player'}
+                onLoad={this.onLoad}
+                onPlay={this.onPlay}
                 loop={false}
-                volume={Volume}
-                onEnd={next}
+                volume={this.state.volume}
+                onEnd={this.next}
             />
 
             <Row type="flex" justify='center' className='Main-Player my-auto'>
@@ -88,37 +101,37 @@ const Footer = props => {
                 </Col>
                 
                 <Col span={3} offset={1} className='my-auto py-auto' >
-                    <Icon type="step-backward" className='button-foot' onClick={rewind} />
-                    <Icon type={Playing ? 'pause-circle' : 'play-circle'} className='button-foot' onClick={pause} />
-                    <Icon type="step-forward" className='button-foot' onClick={next} />
+                    <Icon type="step-backward" className='button-foot' onClick={this.rewind} />
+                    <Icon type={this.state.playing ? 'pause-circle' : 'play-circle'} className='button-foot' onClick={this.pause} />
+                    <Icon type="step-forward" className='button-foot' onClick={this.next} />
                 </Col>
 
                 <Col span={10} offset={1} className='my-auto py-auto'  >
                     <Row type="flex" justify='space-between'>
                         <Col span={2} className='my-auto color-white'>
-                            <span>{timestamp(Duration)}</span>
+                            <span>{this.timestamp(this.state.nowDuration)}</span>
                         </Col>
                         <Col span={18}>
-                            <Slider tipFormatter={null} max={TotalDuration} step={1} value={Duration} />
+                            <Slider tipFormatter={null} max={this.state.totalDuration} step={1} value={this.state.nowDuration} onChange={this.setSeek} />
                         </Col>
                         <Col span={2} className='my-auto color-white'>
-                            <span>{timestamp(TotalDuration)}</span>
+                            <span>{this.timestamp(this.state.totalDuration)}</span>
                         </Col>
                     </Row>
                 </Col>
                 
                 <Col span={3} offset={3} className='my-auto lead-col'>
-                    <div className='icon-custom' onClick={_ => setVolume(0)}>
+                    <div className='icon-custom' onClick={_ => this.setState({volume : 0})}>
                         {   
-                        !Volume ? <NoVolume /> : Volume > 0.5 ? <FullVolume/> : <HalfVolume/>
+                        !this.state.volume ? <NoVolume /> : this.state.volume > 0.5 ? <FullVolume/> : <HalfVolume/>
                         }
                     </div>
                     <div className="cutoman">
-                        <Slider tipFormatter={null} max={1} step={0.01} onChange={e => setVolume(e) } value={Volume} />
+                        <Slider tipFormatter={null} max={1} step={0.01} onChange={this.setVolume} value={this.state.volume} />
                     </div> 
                 </Col>
             </Row>
         </div>
-    )
+    )}
 }
-export default Footer
+export default Player

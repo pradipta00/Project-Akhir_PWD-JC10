@@ -7,7 +7,7 @@ import './Nav.css'
 import Login from '../Login'
 import Register from '../Register'
 
-const Nav = (props) => {
+const NavGuest = (props) => {
 
     const [ShowLogin, setShowLogin] = useState(false)
     const [ShowRegister, setShowRegister] = useState(false)
@@ -23,7 +23,7 @@ const Nav = (props) => {
                 </Col>
                 <Col span={6} >
                     <Input suffix={<Icon type="search" />}
-                        type="text" placeholder="Cari seleramu" className="input-1" />
+                        type="text" placeholder="Find your music" className="input-1" />
                 </Col>
                 <Col span={4} className="d-flex j-cont-r ai-c">
                     <Button type="link" onClick={ _=> setShowLogin(true) } > Log in </Button>
@@ -38,4 +38,4 @@ const Nav = (props) => {
     )
 }
 
-export default Nav
+export default NavGuest

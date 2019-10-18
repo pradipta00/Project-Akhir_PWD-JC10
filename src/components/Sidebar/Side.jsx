@@ -37,13 +37,13 @@ const Side = () => {
 				<Menu.Divider className="missing" />
 				<div className="missing">
 					<Button type="link" className="link-item">FAQ</Button>
-					<Button type="link" className="link-item">Hubungi Kami</Button>
-					<Button type="link" className="link-item">Masukkan</Button>
+					<Button type="link" className="link-item">Call us</Button>
+					<Button type="link" className="link-item">Send feedback</Button>
 				</div>
 				<Menu.Divider className="missing" />
 				<div className="missing wissing">
-					<Button type="link" className="browse2 link-item">Kebijakan Privasi</Button>
-					<Button type="link" className="browse2 link-item">Persyaratan Penggunaan</Button>
+					<Button type="link" className="browse2 link-item">Privacy Policy</Button>
+					<Button type="link" className="browse2 link-item">Terms of use</Button>
 					<p className="browse2">&copy; 2019 Soox.</p>
 					<p className="browse2">All Rights Reserved</p>
 				</div>
