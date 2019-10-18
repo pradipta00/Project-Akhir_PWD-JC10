@@ -12,7 +12,7 @@ const NoVolume = props => <Icon {...props} component={noVolumeSVG} />
 const FullVolume = props => <Icon {...props} component={fullVolumeSVG} />
 const HalfVolume = props => <Icon {...props} component={halfVolumeSVG} />
 
-class Footer extends React.Component {
+class Player extends React.Component {
 
     state = {
         playlist : ["http://localhost:8080/music/music.mp3",'https://goldfirestudios.com/proj/howlerjs/sound.ogg'],
@@ -92,16 +92,12 @@ class Footer extends React.Component {
 
             <Row type="flex" justify='center' className='Main-Player my-auto'>
                 <Col span={1}>
-                    <img src="http://localhost:8080/thumbnail/images.jpg" style={{ width : '80%' }} />
+                    <img src="http://localhost:8080/thumbnail/images.jpg" alt="" style={{ width : '80%' }} />
                 </Col>
                 
                 <Col span={2}>
-                    <a className="overflow-text">
-                        Happier (Azetto Remix) Ft. Martin Garrix
-                    </a>
-                    <a className="overflow-text">
-                        Ed Sheeran
-                    </a>
+                    <span type="link" className="overflow-text">Happier (Azetto Remix) Ft. Martin Garrix</span>
+                    <span type="link" className="overflow-text">Ed Sheeran</span>
                 </Col>
                 
                 <Col span={3} offset={1} className='my-auto py-auto' >
@@ -138,4 +134,4 @@ class Footer extends React.Component {
         </div>
     )}
 }
-export default Footer
+export default Player

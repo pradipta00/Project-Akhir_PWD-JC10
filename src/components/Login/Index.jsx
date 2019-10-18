@@ -1,29 +1,51 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
-import { Modal } from "antd";
+import { Login as Masuk, getToken } from '../../services'
+import GlobalState from '../../context'
+import { Cookies } from 'react-cookie'
+
+import { Modal, Input, Icon, Row, Col, message } from "antd";
 
 const Login = (props) => {
 
-	const [Visible, setVisible] = useState(false)
-	const [Visible2, setVisible2] = useState(false)
+	const [Username, setUsername] = useState(null)
+	const [Password, setPassword] = useState(null)
 
-	if(props.show) {
-		setVisible(true)
+	const { setUser } = useContext(GlobalState);
+
+	let LogIn = _ => {
+		Masuk({Username, Password})
+		.then( res => {
+			if(res.logged){
+				getToken(res).then( res => {
+					let cookie = new Cookies();
+					cookie.set('auth', res.data , { path : '/' })
+				}).catch( err => console.log('Error get token => ' + err) )
+				setUser(res)
+				message.success('Successfully Logged!')
+			}else{
+				message.error('Username/Password invalid')
+			}
+		})
+		.catch( err => console.log(err))
 	}
 
 	return (
-		<div>
-			<Modal
+		<Modal
 			title="Login"
-			visible={Visible}
-			onOk={_ => setVisible(false)}
-			onCancel={_ => setVisible(false)}
-			>
-				<p>Some contents...</p>
-				<p>Some contents...</p>
-				<p>Some contents...</p>
-			</Modal>
-		</div>
+			visible={props.show}
+			okText="Login"
+			onOk={LogIn}
+			cancelText="Cancel"
+			onCancel={props.dismiss}
+		>
+			<Row>
+				<Col span={16} offset={4}>
+					<Input type="text" placeholder="Username / Email" value={Username} onChange={_=>setUsername(_.target.value)}  prefix={ <Icon type='user' /> } style={{marginBottom : '1rem'}} />
+					<Input type="password" placeholder="Password" value={Password} onChange={_=>setPassword(_.target.value)}  prefix={ <Icon type='lock' /> } />
+				</Col>
+			</Row>
+		</Modal>
 	);
 };
 

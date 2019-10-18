@@ -1,3 +1,48 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:600&display=swap');
+
+.mt-1 { margin-top: 1rem !important}
+.mb-1 { margin-bottom: 1rem !important}
+
+.ant-layout-sider-trigger {
+display : none;
+}
+
+.ant-layout-header {
+padding-left : 10px !important;
+}
+
 ::-webkit-scrollbar { 
     display: none; 
+}
+
+.ant-modal-content {
+    border-radius: 1px;
+}
+
+.slick-slide > div > * {
+    height : 250px;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-container {
+    position: relative
+}
+
+.image-container:hover img {
+    opacity: 0.4;
+    transition: .5s ease-in-out;
+}
+
+.image-container:hover .overlay {
+    opacity : 1
+}
+
+.overlay {
+    position: absolute;
+    top : 50%;
+    left : 47.5%;
+    opacity: 0;
+    transition: .5s ease;
 }
