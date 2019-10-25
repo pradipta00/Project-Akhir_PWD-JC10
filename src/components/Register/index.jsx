@@ -2,7 +2,7 @@ import React, { useState, useReducer } from 'react'
 
 import { Modal, Input, Icon, Tooltip, Typography, message } from "antd";
 
-import { Register as Submit } from '../../services'
+import { auth } from '../../services'
 
 const initialState = {
 	Email : null,
@@ -37,7 +37,7 @@ const Register = props => {
 	let sendRegister = _ => {
 		setErrorUser(false); setErrorEmail(false);
 
-		Submit(Data).then(response => { 
+		auth.Register(Data).then(response => { 
 			if( response.success ){
 				props.success(); props.dismiss();
 				message.success("Account Created!");

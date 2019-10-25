@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 
-import { Login as Masuk, getToken } from '../../services'
+import { auth } from '../../services'
 import GlobalState from '../../context'
 import { Cookies } from 'react-cookie'
 
@@ -14,10 +14,10 @@ const Login = (props) => {
 	const { setUser } = useContext(GlobalState);
 
 	let LogIn = _ => {
-		Masuk({Username, Password})
+		auth.Login({Username, Password})
 		.then( res => {
 			if(res.logged){
-				getToken(res).then( res => {
+				auth.getToken(res).then( res => {
 					let cookie = new Cookies();
 					cookie.set('auth', res.data , { path : '/' })
 				}).catch( err => console.log('Error get token => ' + err) )

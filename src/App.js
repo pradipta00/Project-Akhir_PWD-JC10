@@ -7,11 +7,11 @@ import GuestLanding from './pages/GuestLanding'
 import NavGuest from './components/Nav/NavGuest'
 import NavLogin from './components/Nav/NavLogin'
 import Side from './components/Sidebar/Side'
-// import Player from './components/Player/Player'
-import Player from './components/Player/FootBackup'
+import Player from './components/Player/Footer'
+import Test from './components/test/index'
 
 import { StateProvider } from './context'
-import { verifyToken } from './services'
+import { auth } from './services'
 
 import { Layout } from 'antd'
 const { Header, Content, Sider, Footer } = Layout
@@ -26,7 +26,7 @@ const App = () => {
 	
 	useEffect(() => {
 		let existing = cookie.get('auth')
-		if (existing) verifyToken(existing).then( res => {
+		if (existing) auth.verifyToken(existing).then( res => {
 			if ( !res.error ) setUser( res.data )
 			if ( res.error ) cookie.remove('auth');
 		}).catch( err => console.log(err) )	
@@ -45,9 +45,10 @@ const App = () => {
 						<Side />
 					</Sider>
 
-					<Content style={{backgroundColor : '#232323', paddingTop : '10px', paddingBottom : '10px'}}>
+					<Content style={{backgroundColor : '#777', paddingTop : '10px', paddingBottom : '10px'}}>
 						<BrowserRouter>
-							<Route path="/" exact render={() => <GuestLanding />} />
+							<Route path="/" exact render={_=> <GuestLanding />} />
+							<Route path="/test" render={_=> <Test /> } />
 						</BrowserRouter>
 					</Content>
 				</Layout>

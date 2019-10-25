@@ -15,6 +15,7 @@
     "react-cookie": "^4.0.1",
     "react-dom": "^16.9.0",
     "react-howler": "^3.7.4",
+    "react-items-carousel": "^2.8.0",
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.1.2"
   },

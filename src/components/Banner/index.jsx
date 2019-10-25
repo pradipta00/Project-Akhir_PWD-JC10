@@ -18,7 +18,7 @@ const Banner = () => {
             </div>
             <div>
                 <div className="image-container">
-                    <img src={link + "Untitled-1.png"} alt="" />
+                    <img src={link + "Banner-2.png"} alt="" />
                     <div className="overlay">
                         <Icon type="play-circle" className='button-foot' onClick={_ => alert("ASHIAP2")} style={{fontSize : "3rem"}} />
                     </div>
