@@ -30,10 +30,6 @@
 }
 
 .link-item {
-    display: block;
-    margin-top: 1.2rem;
-    margin-bottom: 1.2rem;
-    padding-left : 24px;
     color : rgba(255,255,255,0.5);
     font-size : 0.9rem;
 }

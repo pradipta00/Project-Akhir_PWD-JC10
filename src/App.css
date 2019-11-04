@@ -1,7 +1,11 @@
-@import url('https://fonts.googleapis.com/css?family=Poppins:600&display=swap');
+@import url('https://fonts.googleapis.com/css?family=Roboto:500|Poppins:400,500,600,700,800&display=swap');
 
 .mt-1 { margin-top: 1rem !important}
 .mb-1 { margin-bottom: 1rem !important}
+
+.montserrat { font-family: 'Roboto', Tahoma, sans-serif; }
+
+.myTitle { color : #f7f7f7; font-size: 1.5rem; letter-spacing: 0.1em; }
 
 .ant-layout-sider-trigger {
 display : none;
@@ -41,8 +45,15 @@ padding-left : 10px !important;
 
 .overlay {
     position: absolute;
-    top : 50%;
-    left : 47.5%;
+    top : 0;
+    left : 0;
+    height : 90%;
+    width:  100%;
     opacity: 0;
     transition: .5s ease;
+    display: flex;
+}
+
+.overlay > * {
+    flex: 1;
 }

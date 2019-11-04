@@ -1,6 +1,7 @@
 /* Simplified */
 .d-flex { display : flex }
 .j-cont-r {justify-content: end}
+.j-cont-l {justify-content: start}
 .j-cont-sa {justify-content: space-between}
 .ac-c {align-content: center}
 .ai-c {align-items: center}

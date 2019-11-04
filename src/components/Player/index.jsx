@@ -1,8 +1,10 @@
-import React, { useState, useRef, useEffect } from 'react'
-import './Footer.css'
-
-import { Row, Col, Icon, Slider } from 'antd'
+import React, { useState, useRef, useEffect, useContext } from 'react'
 import ReactHowler from 'react-howler';
+
+import { GlobalState } from '../../Core'
+import { music } from '../../services'
+import { Row, Col, Icon, Slider, message } from 'antd'
+import './Player.css'
 
 const Custom = {
     noVolumeSVG : _ => <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume-off" className="svg-inline--fa fa-volume-off fa-w-8" style={{width : '100%'}} role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M215 71l-89 89H24a24 24 0 0 0-24 24v144a24 24 0 0 0 24 24h102.06L215 441c15 15 41 4.47 41-17V88c0-21.47-26-32-41-17z"></path></svg>,
@@ -21,8 +23,7 @@ let timestamp = (time) => {
 }
 
 const Player = () => {
-    const link = "http://localhost:8080/music/";
-    const [List, setList] = useState(["music.mp3",'music2.mp3']);
+    const link = "http://localhost:8080/";
     const [Current, setCurrent] = useState(0);
     const [Playing, setPlaying] = useState(false);
     const [TotalDuration, setTotalDuration] = useState(0);
@@ -31,25 +32,38 @@ const Player = () => {
 
     const Player = useRef(null)
 
+    const { Playlist, User } = useContext(GlobalState)
+
     const Control = {
         seek : val => {
             setDuration(val);
-            Player.current.seek(val);
-            console.log('SEEK!')
+            Player.current.seek(val)
+            console.trace('ini Jalan Seek');
         },
         rewind : _ => {
             if( Duration < 5 && Current ) setCurrent(e => e-1)
             else Control.seek(0);
+            console.trace('ini Jalan Rewind')
         },
         next : _ => {
-            if ( Current+1 === List.length ) setCurrent(0)
+            if ( Current+1 === Playlist.length ) setCurrent(0)
             else setCurrent(e => e+1);
             setDuration(0)
+            console.trace('ini Jalan Next')
         },
         fileLoad : _ => {
             setTotalDuration(Math.floor(Player.current.duration()))
             Control.seek(0)
-            console.log('kepanggil')
+            console.log('File loaded, inserting into table')
+            let data = {
+                table : 'views',
+                musicId : Playlist[Current].id,
+                usersId : User.id
+            }
+            music.Insert(data).catch( err => {
+                message.error('Failed to insert view data');
+                console.log(err)
+            } )
         }
     }
 
@@ -62,12 +76,13 @@ const Player = () => {
         return () => {
             clearInterval(inter)
         };
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [Playing])
 
     return (
         <React.Fragment>
             <ReactHowler 
-                src={link + List[Current]}
+                src={link + "music/" + Playlist[Current].filename}
                 playing={Playing}
                 ref={Player}
                 onLoad={Control.fileLoad}
@@ -77,12 +92,12 @@ const Player = () => {
 
             <Row type="flex" justify='center' className='Main-Player my-auto'>
                 <Col span={1}>
-                    <img src="http://localhost:8080/thumbnail/images.jpg" alt="" style={{ width : '80%' }} />
+                    <img src={ link + "thumbnails/" + Playlist[Current].thumbnail } alt="" style={{ width : '80%' }} />
                 </Col>
                 
                 <Col span={2}>
-                    <span type="link" className="overflow-text">Happier (Azetto Remix) Ft. Martin Garrix</span>
-                    <span type="link" className="overflow-text">Ed Sheeran</span>
+                    <span type="link" className="overflow-text bold">{Playlist[Current].title}</span>
+                    <span type="link" className="overflow-text">{Playlist[Current].artist_name}</span>
                 </Col>
                 
                 <Col span={3} offset={1} className='my-auto py-auto' >

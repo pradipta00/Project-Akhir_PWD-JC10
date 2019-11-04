@@ -1,16 +1,25 @@
-import React from 'react'
+import React, { useContext } from 'react'
 
-import { Card, Icon } from 'antd'
+import { Icon } from 'antd'
+import { GlobalState } from '../../Core'
 
-const CCard = (props) => (
-    <div className="parent">
-        <Card hoverable cover={<img alt="" src={props.img} />} bordered={false} bodyStyle={{display : 'none '}} >
-            
-        </Card>
+const CCard = (props) => {
+
+    const { title, thumbnail, width } = props.data
+    const { setPlaylist } = useContext(GlobalState)
+
+    let playThis = data => {
+        setPlaylist([data])
+    }
+
+    return(
+    <div className="image-container" style={{width}} >
+        <img alt="" src={`http://localhost:8080/thumbnails/${thumbnail}`} style={{width : '100%'}} />
+        <h1 style={{ color : '#f7f7f7', fontSize : '0.9rem', fontFamily : 'Poppins, sans-serif', fontWeight : '500' }} >{title}</h1>
         <div className='overlay' >
-            <Icon type="play-circle" className='button-foot' onClick={_ => alert("ASHIAP1")} style={{fontSize : "3rem"}} />
+            <Icon type="play-circle" className='button-foot' onClick={ _ => playThis(props.data) } style={{fontSize : "3rem"}} />
         </div>
-    </div>
-)
+    </div>)
+}
 
 export default CCard

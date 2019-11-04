@@ -57,3 +57,7 @@
     white-space: pre;
     color : #fff;
 }
+
+.bold {
+    font-weight: bold;
+}

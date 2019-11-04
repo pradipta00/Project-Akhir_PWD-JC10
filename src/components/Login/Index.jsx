@@ -1,9 +1,8 @@
 import React, { useState, useContext } from "react";
-
-import { auth } from '../../services'
-import GlobalState from '../../context'
 import { Cookies } from 'react-cookie'
 
+import { GlobalState } from '../../Core'
+import { auth } from '../../services'
 import { Modal, Input, Icon, Row, Col, message } from "antd";
 
 const Login = (props) => {
@@ -16,12 +15,20 @@ const Login = (props) => {
 	let LogIn = _ => {
 		auth.Login({Username, Password})
 		.then( res => {
+
+			const { email, fullname, id, roles, username } = res
+
+			let send = {
+				email, fullname, id,
+				roles, username }
+			
 			if(res.logged){
-				auth.getToken(res).then( res => {
+				auth.getToken(send).then( res => {
 					let cookie = new Cookies();
 					cookie.set('auth', res.data , { path : '/' })
 				}).catch( err => console.log('Error get token => ' + err) )
-				setUser(res)
+				console.log('inijalan')
+				setUser(send)
 				message.success('Successfully Logged!')
 			}else{
 				message.error('Username/Password invalid')

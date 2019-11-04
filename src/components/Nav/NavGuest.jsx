@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { withRouter } from 'react-router-dom'
 
 import logo from '../../images/Soox.svg';
 import { Row, Col, Button, Input, Icon } from 'antd'
@@ -15,17 +16,17 @@ const NavGuest = (props) => {
     return (
         <div>
             <Row type='flex' justify="space-between">
-                <Col span={3} className="d-flex j-cont-sa ai-c ">
+                <Col span={8} className="d-flex j-cont-l ai-c ">
                     <Button type="link" onClick={props.hide}>
                         <Icon type={props.status ? 'swap' : 'menu'} className="burger" />
                     </Button>
-                    <img src={logo} alt="" className="Logo" />
+                <img src={logo} alt="" className="Logo" onClick={_=> props.history.push('/')} width={100} />
                 </Col>
-                <Col span={6} >
+                <Col span={8} >
                     <Input suffix={<Icon type="search" />}
                         type="text" placeholder="Find your music" className="input-1" />
                 </Col>
-                <Col span={4} className="d-flex j-cont-r ai-c">
+                <Col span={8} className="d-flex j-cont-r ai-c">
                     <Button type="link" onClick={ _=> setShowLogin(true) } > Log in </Button>
                     <Button type="primary" onClick={_=> setShowRegister(true)} > Sign up </Button>
                 </Col>
@@ -38,4 +39,4 @@ const NavGuest = (props) => {
     )
 }
 
-export default NavGuest
+export default withRouter(NavGuest)

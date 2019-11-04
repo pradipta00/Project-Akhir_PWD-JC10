@@ -1,13 +1,21 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
+import { withRouter } from 'react-router-dom'
 
-import { Menu, Icon, Button } from 'antd'
+import { Menu, Icon } from 'antd'
 import './Side.css'
 
-const Side = () => {
+const Side = props => {
+
+	const [Selected, setSelected] = useState('')
+
+	useEffect(() => {
+		props.history.push(`/${Selected}`)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [Selected])
 
 	return (
 		<div>
-			<Menu mode="inline" theme="dark" className="Menu-main" defaultSelectedKeys={['home']}>
+			<Menu mode="inline" theme="dark" className="Menu-main" selectedKeys={[Selected]} onSelect={ n => setSelected(n.key) } >
 				<Menu.Item key="home">
 					<Icon type="home" />
 					<span>Home</span>
@@ -35,22 +43,21 @@ const Side = () => {
 				</Menu.Item>
 
 				<Menu.Divider className="missing" />
-				<div className="missing">
-					<Button type="link" className="link-item">FAQ</Button>
-					<Button type="link" className="link-item">Call us</Button>
-					<Button type="link" className="link-item">Send feedback</Button>
-				</div>
+
+				<Menu.Item key='pricing' className='missing link-item'>Pricing</Menu.Item>
+				<Menu.Item key='faq' className='missing link-item'>FAQ</Menu.Item>
+				<Menu.Item key='contact' className='missing link-item'>Call us</Menu.Item>
+
 				<Menu.Divider className="missing" />
-				<div className="missing wissing">
-					<Button type="link" className="browse2 link-item">Privacy Policy</Button>
-					<Button type="link" className="browse2 link-item">Terms of use</Button>
-					<p className="browse2">&copy; 2019 Soox.</p>
-					<p className="browse2">All Rights Reserved</p>
-				</div>
+				
+				<Menu.Item key='admin' className='missing link-item'>Privacy Policy</Menu.Item>
+				<Menu.Item key='terms' className='missing link-item'>Terms Of Use</Menu.Item>
+				<p className='missing browse2 link-item'>&copy; 2019 Soox.</p>
+				<p className='missing browse2 link-item'>All Rights Reserved</p>
 				
 			</Menu>
 		</div>
 	)
 }
 
-export default Side
+export default withRouter(Side)
