@@ -4,12 +4,15 @@ import { Cookies } from 'react-cookie'
 
 import { GlobalState } from './Core'
 import './App.css'
-import NavGuest from './components/Nav/NavGuest'
-import NavLogin from './components/Nav/NavLogin'
+
+import Nav from './components/Nav'
 import Side from './components/Sidebar/Side'
 import Player from './components/Player'
+
 import Home from './pages/Home'
 import AdminDashboard from './pages/AdminDashboard'
+import Account from './pages/Account'
+import Pricing from './pages/Pricing'
 import Album from './pages/Album'
 
 import { auth } from './services'
@@ -20,17 +23,17 @@ const { Header, Content, Sider, Footer } = Layout
 const App = () => {
 
 	const [Sidebar, setSidebar] = useState(false)
-	const { setUser, User } = useContext(GlobalState)
+	const { setUser } = useContext(GlobalState)
 	
 	let collaps = _ => setSidebar(e => !e)
 	
 	useEffect(() => {
 		let cookie = new Cookies();
 		let existing = cookie.get('auth')
-
+		
 		if (existing) auth.verifyToken(existing).then( res => {
-			if ( !res.error ) setUser( res.data )
-			if ( res.error ) cookie.remove('auth');
+			if ( !res.data.error ) setUser( res.data )
+			else cookie.remove('auth');
 		}).catch( err => console.log(err) )	
 
 		return undefined
@@ -41,7 +44,7 @@ const App = () => {
 		<BrowserRouter>
 			<Layout style={{height : '100vh'}}>
 				<Header>
-					{ User.logged ? <NavLogin hide={collaps} status={Sidebar} /> : <NavGuest hide={collaps} status={Sidebar} />}
+					<Nav hide={collaps} status={Sidebar} />
 				</Header>
 				
 				<Layout>
@@ -49,11 +52,18 @@ const App = () => {
 						<Side />
 					</Sider>
 
-					<Content style={{backgroundColor : '#777', paddingTop : '10px', paddingBottom : '10px'}}>
-							<Route path="/" exact render={_=> <Home />} />
-							<Route path="/home" render={_=> <Home />} />
-							<Route path="/admin" render={_=> <AdminDashboard /> } />
-							<Route path="/album" render={_=> <Album /> } />
+					<Content style={{backgroundColor : '#222'}}>
+							<Route path="/home" component={Home} />
+							<Route path="/" exact component={Home} />
+							<Route path="/admin" component={AdminDashboard} />
+							<Route path="/account" component={Account} />
+							<Route path="/pricing" component={Pricing} />
+							<Route path="/album" component={Album} />
+							
+							<Route path="/trending" render={_=> ('ini trending') } />
+							<Route path="/artist" render={_=> ('ini artist') } />
+							<Route path="/genre" render={_=> ('ini genre') } />
+							<Route path="/faq" render={_=> ('ini faq') } />
 					</Content>
 				</Layout>
 				

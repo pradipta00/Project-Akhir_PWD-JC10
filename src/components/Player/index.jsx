@@ -2,8 +2,9 @@ import React, { useState, useRef, useEffect, useContext } from 'react'
 import ReactHowler from 'react-howler';
 
 import { GlobalState } from '../../Core'
-import { music } from '../../services'
+import { files, music } from '../../services'
 import { Row, Col, Icon, Slider, message } from 'antd'
+import moment from 'moment'
 import './Player.css'
 
 const Custom = {
@@ -23,18 +24,22 @@ let timestamp = (time) => {
 }
 
 const Player = () => {
-    const link = "http://localhost:8080/";
     const [Current, setCurrent] = useState(0);
     const [Playing, setPlaying] = useState(false);
     const [TotalDuration, setTotalDuration] = useState(0);
     const [Duration, setDuration] = useState(0);
-    const [Volume, setVolume] = useState(1)
+    const [Volume, setVolume] = useState(1);
+    const [Loading, setLoading] = useState(true)
 
     const Player = useRef(null)
 
     const { Playlist, User } = useContext(GlobalState)
 
     const Control = {
+        play : _ => {
+            if (User) setPlaying(e => !e);
+            else message.warning('Please login to start listening')
+        },
         seek : val => {
             setDuration(val);
             Player.current.seek(val)
@@ -54,35 +59,39 @@ const Player = () => {
         fileLoad : _ => {
             setTotalDuration(Math.floor(Player.current.duration()))
             Control.seek(0)
-            console.log('File loaded, inserting into table')
+            setLoading(false);
             let data = {
                 table : 'views',
                 musicId : Playlist[Current].id,
-                usersId : User.id
+                userId : User.id,
+                date : moment( new Date() ).format('YYYY-MM-DD HH:mm:ss')
             }
-            music.Insert(data).catch( err => {
-                message.error('Failed to insert view data');
-                console.log(err)
-            } )
-        }
+            if (User) music.Insert(data).catch( err => console.log(err))
+        },
     }
 
     useEffect(() => {
-        const inter = setInterval(_ => {
-            if(Playing && Duration < TotalDuration) {
-                setDuration(e => {return e+1})
-            }
+        const durationInterval = setInterval(_ => {
+            let localDuration = 0;
+            if(Playing && localDuration < TotalDuration) setDuration(e => { localDuration = e++; return e })
+            if(Playing && localDuration < TotalDuration) { setPlaying(e => !e); setDuration(0); setLoading(true) }
         }, 1000)
         return () => {
-            clearInterval(inter)
+            clearInterval(durationInterval)
         };
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [Playing])
+    }, [Playing, setDuration, TotalDuration])
 
+    useEffect(() => {
+        setLoading(true);
+        Control.seek(0);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [Current, Playlist])
+    
+    /* eslint-disable */
     return (
         <React.Fragment>
             <ReactHowler 
-                src={link + "music/" + Playlist[Current].filename}
+                src={files.music(Playlist[Current].filename)}
                 playing={Playing}
                 ref={Player}
                 onLoad={Control.fileLoad}
@@ -92,7 +101,7 @@ const Player = () => {
 
             <Row type="flex" justify='center' className='Main-Player my-auto'>
                 <Col span={1}>
-                    <img src={ link + "thumbnails/" + Playlist[Current].thumbnail } alt="" style={{ width : '80%' }} />
+                    <img src={ files.thumbnail(Playlist[Current].thumbnail) } alt="" style={{ width : '80%' }} />
                 </Col>
                 
                 <Col span={2}>
@@ -101,9 +110,9 @@ const Player = () => {
                 </Col>
                 
                 <Col span={3} offset={1} className='my-auto py-auto' >
-                    <Icon type="step-backward" className='button-foot' onClick={Control.rewind} />
-                    <Icon type={Playing ? 'pause-circle' : 'play-circle'} className='button-foot' onClick={_=> setPlaying(e=>!e)} />
-                    <Icon type="step-forward" className='button-foot' onClick={Control.next} />
+                    <Icon type="step-backward" className='button-foot' onClick={Loading ? _=>null : Control.rewind} />
+                    <Icon type={Playing ? 'pause-circle' : 'play-circle'} className='button-foot' onClick={Loading ? _=>null : Control.play} />
+                    <Icon type="step-forward" className='button-foot' onClick={Loading ? _=>null : Control.next} />
                 </Col>
 
                 <Col span={10} offset={1} className='my-auto py-auto'  >

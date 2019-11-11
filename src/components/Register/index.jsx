@@ -57,7 +57,7 @@ const Register = props => {
 			cancelText="Cancel"
 			onCancel={props.dismiss}
 		>
-			<Input type="text" placeholder="Full name" value={Data.Fullname} onChange={e => dispatch({type : 'Fullname', payload : e.target.value})} className='mb-1' />
+			<Input type="text" placeholder="Full name" autoFocus value={Data.Fullname} onChange={e => dispatch({type : 'Fullname', payload : e.target.value})} className='mb-1' />
 			
 			<Typography.Text strong type='danger' style={{ display : [ErrorUser ? 'block' : 'none'] }} > Username already exist </Typography.Text>
 			<Input type="text" placeholder="Username" value={Data.Username} onChange={e => dispatch({type : 'Username', payload : e.target.value})} prefix={ <Icon type='user' /> } suffix={ <Tooltip title="Username can only includes letters, numbers, - or _"><Icon type="info-circle"/></Tooltip> } className="mb-1" />

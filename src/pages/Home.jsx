@@ -12,7 +12,7 @@ const Home = () => {
     const [ListMusic, setListMusic] = useState([])
 
     useEffect(() => {
-        music.Get('music_artist').then( res => {
+        music.Get('latest_music_artist').then( res => {
             setListMusic(res.reverse())
         })
         setWidth( window.innerWidth )
@@ -43,7 +43,7 @@ const Home = () => {
                 <h1 className='montserrat myTitle' >New Releases</h1>
                 { Width ? 
                     <ItemsCarousel { ...carouselProps} >
-                    { ListMusic.slice(0,9).map(item => (
+                    { ListMusic.map(item => (
                             <CCard data={item} width={ Width/10 } key={item.id} />
                         )) }
                     </ItemsCarousel> : <></> }

@@ -1,144 +1,74 @@
-import React from 'react'
-import { Table, Input, InputNumber, Popconfirm, Form } from 'antd';
+import React, { useState, useEffect } from 'react'
+import { Button, Icon, Row, Col } from 'antd'
+import ItemsCarousel from "react-items-carousel";
 
-const data = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  });
-}
+import CCard from "../components/CustomCard";
+import { music } from '../services'
 
-class EditableCell extends React.Component {
-  render(){
-    const {
-        children,
-        editing,
-        record,
-        ...restProps
-    } = this.props;
-    console.log({
-        restProps
-
-    }, 'data')
-    return (
-      <td {...restProps}>
-        {editing ? (
-            <Input value={record[restProps.dataIndex]} />
-        ) : (
-          children
-        )}
-      </td>
-    );
-  };
-
-}
-
-class EditableTable extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = { data, editingKey: '' };
-    this.columns = [
-      {
-        title: 'name',
-        dataIndex: 'name',
-        width: '25%',
-        editable: true,
-      },
-      {
-        title: 'age',
-        dataIndex: 'age',
-        width: '15%',
-        editable: true,
-      },
-      {
-        title: 'address',
-        dataIndex: 'address',
-        width: '40%',
-        editable: true,
-      },
-      {
-        title: 'operation',
-        dataIndex: 'operation',
-        render: (_ , record) => {
-          const { editingKey } = this.state;
-          const editable = this.isEditing(record);
-          return editable ? (
-            <span>
-                  <a
-                    onClick={() => this.save(record.key)}
-                    style={{ marginRight: 8 }}
-                  >
-                    Save
-                  </a>
-              <Popconfirm title="Sure to cancel?" onConfirm={() => this.cancel(record.key)}>
-                <a>Cancel</a>
-              </Popconfirm>
-            </span>
-          ) : (
-            <a disabled={editingKey !== ''} onClick={() => this.edit(record.key)}>
-              Edit
-            </a>
-          );
-        },
-      },
-    ];
-  }
-
-  isEditing = record => record.key === this.state.editingKey;
-
-  cancel = () => {
-    this.setState({ editingKey: '' });
-  };
-
-  save(form, key) {
-    console.log({form , key})
-  }
-
-  edit(key) {
-    this.setState({ editingKey: key });
-  }
-
-  render() {
-    const components = {
-      body: {
-        cell: EditableCell,
-      },
-    };
-
-    const columns = this.columns.map(col => {
-      if (!col.editable) {
-        return col;
-      }
-      return {
-        ...col,
-        onCell: record => {
-            let send = {
-                record,
-                dataIndex: col.dataIndex,
-                editing: this.isEditing(record),
-            }
-        return send },
-      };
-    });
+const Album = () => {
+    
+    /* eslint-disable */
+    const [activeItemIndex1, setActiveItemIndex1] = useState(0);
+    const [activeItemIndex2, setActiveItemIndex2] = useState(0);
+    /* eslint-enable */
+    const [Width, setWidth] = useState(0)
+    const [Latest, setLatest] = useState([])
+    const [Random, setRandom] = useState([])
+    
+    useEffect(() => {
+        (async _ => {
+            await music.Get('latest_album_thumbnail').then( res => {
+                setLatest(res)
+            })
+            await music.Get('random_album_thumbnail').then( res => {
+                setRandom(res)
+            })
+            setWidth( window.innerWidth )
+        })()
+    }, [])
+    
+    
+    let carouselProps = number => ({
+        /* eslint-disable */
+        requestToChangeActive : eval('setActiveItemIndex' + number),
+        activeItemIndex : eval('activeItemIndex' + number),
+        /* eslint-enable */
+        infiniteLoop : true,
+        gutter : 20,
+        activePosition : "center",
+        chevronWidth : 70,
+        disableSwipe : false,
+        alwaysShowChevrons : false,
+        numberOfCards :  Math.floor( Width / 200 ) || 6 ,
+        slidesToScroll : 1,
+        outsideChevron : true,
+        showSlither : false,
+        firstAndLastGutter : false,
+        rightChevron :  <Button shape="circle"><Icon type="right" /></Button>,
+        leftChevron :  <Button shape="circle"><Icon type="left" /></Button> 
+    })
 
     return (
-      <>
-        <Table
-          components={components}
-          bordered
-          dataSource={this.state.data}
-          columns={columns}
-          rowClassName="editable-row"
-          pagination={{
-            onChange: this.cancel,
-          }}
-        />
-      </>
-    );
-  }
+    <Row>
+        <Col span={20} offset={2}>
+            <div>
+            <h1 className='montserrat myTitle' >New Releases</h1>
+                <ItemsCarousel { ...carouselProps(1) } >
+                { Latest.map(item => (
+                        <CCard data={item} width={ Width/10 } key={item.id} />
+                    )) }
+                </ItemsCarousel>
+
+                <h1 className='montserrat myTitle' >Y</h1>
+                <ItemsCarousel {...carouselProps(2)}>
+                { Random.map(item => (
+                        <CCard data={item} width={ Width/10 } key={item.id} />
+                    )) }
+                </ItemsCarousel> 
+            </div>
+        </Col>
+    </Row>
+    )
 }
 
-export default EditableTable;
+export default Album

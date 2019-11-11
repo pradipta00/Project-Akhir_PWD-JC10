@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { withRouter } from 'react-router-dom'
-
+import { Redirect, withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
 import './Side.css'
 
@@ -9,12 +8,18 @@ const Side = props => {
 	const [Selected, setSelected] = useState('')
 
 	useEffect(() => {
-		props.history.push(`/${Selected}`)
+		let unlisten = props.history.listen( (location, action) => {
+			setSelected(location.pathname.substr(1))
+		});
+		return () => {
+			unlisten()
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [Selected])
+	}, [])
 
 	return (
 		<div>
+			{ Selected ? <Redirect to={`/${Selected}`} /> : <></> }
 			<Menu mode="inline" theme="dark" className="Menu-main" selectedKeys={[Selected]} onSelect={ n => setSelected(n.key) } >
 				<Menu.Item key="home">
 					<Icon type="home" />
