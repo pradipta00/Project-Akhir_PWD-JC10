@@ -14,19 +14,20 @@ const Album = () => {
     /* eslint-enable */
 
     const [Width, setWidth] = useState(0)
-    const [LIST, setLIST] = useState({ Latest : [], Random : [], Most : [] })
+    const [LIST, setLIST] = useState({ AllTime : [], Today : [], Month : [] })
     const [Show, setShow] = useState(false)
     
     useEffect(() => {
-        (async _ => {
-            await music.Get('latest_album_thumbnail').then( res => {
-                setLIST(e => ({...e , Latest: res}))
-            })
-            await music.Get('most_album_thumbnail').then( res => {
-                setLIST(e => ({ ...e, Most: res }))
-            })
-            setWidth( window.innerWidth )
-        })()
+        music.Get('most_music_artist').then( res => {
+            setLIST(e => ({...e , AllTime: res}))
+        })
+        music.Get('most_music_artist_today').then( res => {
+            setLIST(e => ({...e , Today: res}))
+        })
+        music.Get('most_music_artist_month').then( res => {
+            setLIST(e => ({...e , Month: res}))
+        })
+        setWidth( window.innerWidth )
     }, [])
     
     let carouselProps = number => ({
@@ -59,19 +60,26 @@ const Album = () => {
     <Row>
         <Col span={20} offset={2}>
             <div>
-            <h1 className='montserrat myTitle' >New Releases</h1>
+            <h1 className='montserrat myTitle' >MOST LISTENED ALL TIME</h1>
                 <ItemsCarousel { ...carouselProps(1) } >
-                { LIST.Latest.slice(0,7).map(item => (
-                        <CCard data={item} key={item.id} type='album' show={detailShow} />
+                { LIST.AllTime.map(item => (
+                        <CCard data={item} key={item.id} type='music' />
                     )) }
                 </ItemsCarousel>
 
-                <h1 className='montserrat myTitle' >Our Listener Favorites</h1>
-                <ItemsCarousel {...carouselProps(2)}>
-                { LIST.Most.map(item => (
-                        <CCard data={item} key={item.id} type='album' show={detailShow} />
+            <h1 className='montserrat myTitle' >Today Hits</h1>
+                <ItemsCarousel { ...carouselProps(2) } >
+                { LIST.Today.map(item => (
+                        <CCard data={item} key={item.id} type='music' />
                     )) }
-                </ItemsCarousel> 
+                </ItemsCarousel>
+
+            <h1 className='montserrat myTitle' >This Month Top Tier</h1>
+                <ItemsCarousel { ...carouselProps(2) } >
+                { LIST.Month.map(item => (
+                        <CCard data={item} key={item.id} type='music' />
+                    )) }
+                </ItemsCarousel>
             </div>
         </Col>
     </Row>

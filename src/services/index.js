@@ -50,9 +50,9 @@ const auth = {
         })
     },
 
-    get : data => {
+    get : (data, id = 'userId') => {
         return new Promise((resolve, reject) => {
-            axios.get( mainLink + 'auth/get?table=' + data)
+            axios.get( mainLink + `auth/get?table=${data}&id=${id}`)
             .then( res => resolve(res) )
             .catch( err => reject(err) )
         })
@@ -76,9 +76,9 @@ const auth = {
 }
 
 const music = {
-    Get : (data, id='') => {
+    Get : (table, id='', albumId) => {
         return new Promise((resolve, reject) => {
-            axios.get( mainLink + `music/get?get=${data}&id=${id}` ).then(res => resolve(res.data)).catch(err => reject(err))
+            axios.get( mainLink + `music/get`, { params : { table, id, albumId } } ).then(res => resolve(res.data)).catch(err => reject(err))
         })
     },
 

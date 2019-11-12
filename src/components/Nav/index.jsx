@@ -23,7 +23,7 @@ const Nav = (props) => {
         }, 500);
     }, [RedirToThis])
 
-    const { setUser, User, refreshUser } = useContext(GlobalState)
+    const { setUser, User } = useContext(GlobalState)
     const cookie = new Cookies();
     let logout = _ => {
         cookie.remove('auth')
@@ -40,7 +40,7 @@ const Nav = (props) => {
 			</Menu.Item>
 			{
 				User.roles === 'presiden' ?
-				<Menu.Item onClick={_ =>{console.log('got called');refreshUser()}}>
+				<Menu.Item onClick={_ => setRedirToThis('/admin')}>
 					<span >
 					Admin
 					</span>

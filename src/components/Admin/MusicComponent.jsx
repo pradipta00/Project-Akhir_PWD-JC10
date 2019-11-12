@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, createContext } from 'react'
 
 import { Input, Button, Row, Col, Icon, Select, Upload, message, Table, Modal, Typography } from 'antd'
-import { music, files } from '../services'
+import { music, files } from '../../services'
 
 const { Title } = Typography;
 

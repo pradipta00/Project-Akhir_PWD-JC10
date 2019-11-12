@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
 import ReactHowler from 'react-howler';
+import { Row, Col, Icon, Slider, message } from 'antd'
+import moment from 'moment'
+import { Redirect } from 'react-router-dom'
 
 import { GlobalState } from '../../Core'
 import { files, music } from '../../services'
-import { Row, Col, Icon, Slider, message } from 'antd'
-import moment from 'moment'
 import './Player.css'
 
 const Custom = {
@@ -29,36 +30,37 @@ const Player = () => {
     const [TotalDuration, setTotalDuration] = useState(0);
     const [Duration, setDuration] = useState(0);
     const [Volume, setVolume] = useState(1);
-    const [Loading, setLoading] = useState(true)
-
+    
+    const [Loading, setLoading] = useState(false)
+    const [RedirToThis, setRedirToThis] = useState(false)
+    
     const Player = useRef(null)
 
     const { Playlist, User } = useContext(GlobalState)
 
     const Control = {
         play : _ => {
-            if (User) setPlaying(e => !e);
+            if (User.limit) {message.warning('You have reached maximum listen limit for today'); setRedirToThis('/pricing')}
+            else if (User) setPlaying(e => !e);
             else message.warning('Please login to start listening')
         },
         seek : val => {
             setDuration(val);
             Player.current.seek(val)
-            console.trace('ini Jalan Seek');
         },
         rewind : _ => {
             if( Duration < 5 && Current ) setCurrent(e => e-1)
             else Control.seek(0);
-            console.trace('ini Jalan Rewind')
+            console.log('ini Jalan Rewind')
         },
         next : _ => {
             if ( Current+1 === Playlist.length ) setCurrent(0)
             else setCurrent(e => e+1);
             setDuration(0)
-            console.trace('ini Jalan Next')
+            console.log('ini Jalan Next')
         },
         fileLoad : _ => {
             setTotalDuration(Math.floor(Player.current.duration()))
-            Control.seek(0)
             setLoading(false);
             let data = {
                 table : 'views',
@@ -66,7 +68,7 @@ const Player = () => {
                 userId : User.id,
                 date : moment( new Date() ).format('YYYY-MM-DD HH:mm:ss')
             }
-            if (User) music.Insert(data).catch( err => console.log(err))
+            if (User && !User.limit) music.Insert(data).catch( err => console.log(err))
         },
     }
 
@@ -74,7 +76,7 @@ const Player = () => {
         const durationInterval = setInterval(_ => {
             let localDuration = 0;
             if(Playing && localDuration < TotalDuration) setDuration(e => { localDuration = e++; return e })
-            if(Playing && localDuration < TotalDuration) { setPlaying(e => !e); setDuration(0); setLoading(true) }
+            if(Playing && localDuration === TotalDuration) { setPlaying(e => !e); setDuration(0); setLoading(true) }
         }, 1000)
         return () => {
             clearInterval(durationInterval)
@@ -86,12 +88,16 @@ const Player = () => {
         Control.seek(0);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [Current, Playlist])
+
+    useEffect(() => {
+        setLoading(false)
+    }, [])
     
-    /* eslint-disable */
     return (
         <React.Fragment>
+            {RedirToThis ? <Redirect to={RedirToThis} /> : null}
             <ReactHowler 
-                src={files.music(Playlist[Current].filename)}
+                src={files.music(Playlist[Current].filename || '.mp3')}
                 playing={Playing}
                 ref={Player}
                 onLoad={Control.fileLoad}
@@ -101,18 +107,18 @@ const Player = () => {
 
             <Row type="flex" justify='center' className='Main-Player my-auto'>
                 <Col span={1}>
-                    <img src={ files.thumbnail(Playlist[Current].thumbnail) } alt="" style={{ width : '80%' }} />
+                    <img src={ files.thumbnail(Playlist[Current].thumbnail || 'null.png') } alt="" style={{ width : '80%' }} />
                 </Col>
                 
                 <Col span={2}>
-                    <span type="link" className="overflow-text bold">{Playlist[Current].title}</span>
-                    <span type="link" className="overflow-text">{Playlist[Current].artist_name}</span>
+                    <span type="link" className="overflow-text bold">{Playlist[Current].title || 'Play a song'}</span>
+                    <span type="link" className="overflow-text">{Playlist[Current].artist_name || 'Start listening'}</span>
                 </Col>
                 
                 <Col span={3} offset={1} className='my-auto py-auto' >
-                    <Icon type="step-backward" className='button-foot' onClick={Loading ? _=>null : Control.rewind} />
-                    <Icon type={Playing ? 'pause-circle' : 'play-circle'} className='button-foot' onClick={Loading ? _=>null : Control.play} />
-                    <Icon type="step-forward" className='button-foot' onClick={Loading ? _=>null : Control.next} />
+                    <Icon type="step-backward" className='button-foot' onClick={Control.rewind} />
+                    <Icon type={Loading ? 'loading' : Playing ? 'pause-circle' : 'play-circle'} className='button-foot' onClick={Control.play} />
+                    <Icon type="step-forward" className='button-foot' onClick={Control.next} />
                 </Col>
 
                 <Col span={10} offset={1} className='my-auto py-auto'  >

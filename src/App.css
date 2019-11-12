@@ -65,3 +65,7 @@ padding-left : 10px !important;
 #bar li {
     border-left: none !important;
 }
+
+.ant-list-item-meta-content { margin : auto }
+
+.ant-list-item:hover { background-color: #454545 !important; }

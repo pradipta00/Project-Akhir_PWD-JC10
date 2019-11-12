@@ -103,6 +103,40 @@ const Account = () => {
                                 </Paragraph>
                                 <Button type='primary' onClick={_=> setRedir('/pricing')} >Go Premium</Button>
                             </div>
+                            : User.roles === 'presiden' ?
+                            <div>
+                                <Title level={3} >Account Details</Title>
+                                <Paragraph>
+                                    Hi, you are an admin here. Please take care of us.
+                                    <br />
+                                    Premium expiration date : &nbsp;
+                                    <Text strong>
+                                        Infinity
+                                    </Text>
+                                    <br /><br />
+                                    Contact us for help at
+                                    <br />
+                                    <Text strong>
+                                        +628 1914 0000 48
+                                    </Text>
+                                </Paragraph>
+                            </div>
+                            : User.roles === 'pending' ?
+                            <div>
+                                <Title level={3} >Premium Details</Title>
+                                <Paragraph>
+                                    Hi, your premium is on pending. Please wait while our admin review your payment
+                                    <br />
+                                    Premium expiration date : &nbsp;
+                                    <Text strong> Unknown </Text>
+                                    <br /><br />
+                                    Contact us for help at
+                                    <br />
+                                    <Text strong>
+                                        +628 1914 0000 48
+                                    </Text>
+                                </Paragraph>
+                            </div>
                             :
                             <div>
                                 <Title level={3} >Premium Details</Title>

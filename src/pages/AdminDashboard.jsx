@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Icon, Menu } from 'antd'
-import Music from './MusicComponent'
-import Users from './UsersComponent'
+import Music from '../components/Admin/MusicComponent'
+import Users from '../components/Admin/UsersComponent'
 
 const AdminDashboard = () => {
 

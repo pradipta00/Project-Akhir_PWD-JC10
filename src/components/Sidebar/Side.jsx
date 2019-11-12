@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Redirect, withRouter } from 'react-router-dom'
+import { withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
 import './Side.css'
 
@@ -7,40 +7,42 @@ const Side = props => {
 
 	const [Selected, setSelected] = useState('')
 
+	/* eslint-disable */
 	useEffect(() => {
 		let unlisten = props.history.listen( (location, action) => {
 			setSelected(location.pathname.substr(1))
 		});
+
+		let current = props.history.location.pathname;
+		if (current) setSelected(current)
+
 		return () => {
 			unlisten()
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+	
+	useEffect(() => { if (Selected) props.history.push(Selected) }, [Selected])
+	/* eslint-enable */
 
 	return (
 		<div>
-			{ Selected ? <Redirect to={`/${Selected}`} /> : <></> }
 			<Menu mode="inline" theme="dark" className="Menu-main" selectedKeys={[Selected]} onSelect={ n => setSelected(n.key) } >
 				<Menu.Item key="home">
 					<Icon type="home" />
 					<span>Home</span>
-				</Menu.Item>
-				<Menu.Item key="trending">
-					<Icon type="fire" />
-					<span>Trending</span>
 				</Menu.Item>
 
 				<Menu.Divider></Menu.Divider>
 
 				<p className="divider browse" >Browse</p>
 
+				<Menu.Item key="trending">
+					<Icon type="fire" />
+					<span>Trending</span>
+				</Menu.Item>
 				<Menu.Item key="genre">
 					<Icon type="fork" />
 					<span> Genre</span>
-				</Menu.Item>
-				<Menu.Item key="artist">
-					<Icon type="audio" />
-					<span> Artist</span>
 				</Menu.Item>
 				<Menu.Item key="album">
 					<Icon type="folder" />

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Row, Col, Table, Typography, Button, Popconfirm, message } from 'antd'
-import { auth, files } from '../services'
+import { auth, files } from '../../services'
 import moment from 'moment'
 
 const { Title } = Typography
