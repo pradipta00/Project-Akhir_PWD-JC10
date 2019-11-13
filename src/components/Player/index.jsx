@@ -1,12 +1,14 @@
 import React, { useState, useRef, useEffect, useContext } from 'react'
-import ReactHowler from 'react-howler';
-import { Row, Col, Icon, Slider, message } from 'antd'
-import moment from 'moment'
+import { Row, Col, Icon, Slider, message, Drawer, List, Typography, Button } from 'antd'
 import { Redirect } from 'react-router-dom'
+import ReactHowler from 'react-howler';
+import moment from 'moment'
 
 import { GlobalState } from '../../Core'
 import { files, music } from '../../services'
 import './Player.css'
+
+const { Paragraph, Text } = Typography
 
 const Custom = {
     noVolumeSVG : _ => <svg aria-hidden="true" focusable="false" data-prefix="fas" data-icon="volume-off" className="svg-inline--fa fa-volume-off fa-w-8" style={{width : '100%'}} role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M215 71l-89 89H24a24 24 0 0 0-24 24v144a24 24 0 0 0 24 24h102.06L215 441c15 15 41 4.47 41-17V88c0-21.47-26-32-41-17z"></path></svg>,
@@ -24,6 +26,20 @@ let timestamp = (time) => {
     return `${mins.slice(-2)}:${second.slice(-2)}`
 }
 
+const useCompare = (val) => {
+    const prevVal = usePrevious(val)
+    if (prevVal)
+        return prevVal.length + 1 !== val.length
+}
+
+const usePrevious = (value) => {
+    const ref = useRef();
+    useEffect(() => {
+      ref.current = value;
+    });
+    return ref.current;
+}
+
 const Player = () => {
     const [Current, setCurrent] = useState(0);
     const [Playing, setPlaying] = useState(false);
@@ -33,10 +49,11 @@ const Player = () => {
     
     const [Loading, setLoading] = useState(false)
     const [RedirToThis, setRedirToThis] = useState(false)
+    const [Draw, setDraw] = useState(false)
     
     const Player = useRef(null)
 
-    const { Playlist, User } = useContext(GlobalState)
+    const { Playlist, User, setPlaylist } = useContext(GlobalState)
 
     const Control = {
         play : _ => {
@@ -49,15 +66,18 @@ const Player = () => {
             Player.current.seek(val)
         },
         rewind : _ => {
-            if( Duration < 5 && Current ) setCurrent(e => e-1)
-            else Control.seek(0);
-            console.log('ini Jalan Rewind')
+            if( Duration < 5 && Current ) 
+                { setCurrent(e => e-1); setLoading(true) }
+            else 
+                Control.seek(0);
         },
         next : _ => {
-            if ( Current+1 === Playlist.length ) setCurrent(0)
-            else setCurrent(e => e+1);
-            setDuration(0)
-            console.log('ini Jalan Next')
+            if ( Current+1 === Playlist.length ) 
+                setCurrent(0)
+            else 
+                setCurrent(e => e+1)
+            setDuration(0);
+            if ( Playlist.length > 1 ) setLoading(true)
         },
         fileLoad : _ => {
             setTotalDuration(Math.floor(Player.current.duration()))
@@ -70,41 +90,52 @@ const Player = () => {
             }
             if (User && !User.limit) music.Insert(data).catch( err => console.log(err))
         },
+        delete : (id) => {
+            setPlaylist(e => e.filter(item => item.id !== id))
+        },
     }
+
+    const PlaylistChanged = useCompare(Playlist)
 
     useEffect(() => {
         const durationInterval = setInterval(_ => {
             let localDuration = 0;
-            if(Playing && localDuration < TotalDuration) setDuration(e => { localDuration = e++; return e })
-            if(Playing && localDuration === TotalDuration) { setPlaying(e => !e); setDuration(0); setLoading(true) }
+            if(Playing && localDuration < TotalDuration && !Loading) setDuration(e => { localDuration = e++; return e })
         }, 1000)
         return () => {
             clearInterval(durationInterval)
         };
-    }, [Playing, setDuration, TotalDuration])
+    }, [Playing, setDuration, TotalDuration, Loading])
 
     useEffect(() => {
-        setLoading(true);
-        Control.seek(0);
+        if (PlaylistChanged){
+            setLoading(true);
+            Control.seek(0);
+        } else {
+            setLoading(false)
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [Current, Playlist])
-
+    }, [PlaylistChanged, Playlist])
+    
     useEffect(() => {
-        setLoading(false)
+        setTimeout(_ => {
+            setLoading(false)
+        }, 1000)
     }, [])
     
     return (
         <React.Fragment>
             {RedirToThis ? <Redirect to={RedirToThis} /> : null}
             <ReactHowler 
-                src={files.music(Playlist[Current].filename || '.mp3')}
-                playing={Playing}
                 ref={Player}
+                src={files.music(Playlist[Current].filename || '.mp3')}
                 onLoad={Control.fileLoad}
+                onEnd={Control.next}
+                playing={Playing}
                 loop={false}
                 volume={Volume}
             />
-
+            
             <Row type="flex" justify='center' className='Main-Player my-auto'>
                 <Col span={1}>
                     <img src={ files.thumbnail(Playlist[Current].thumbnail || 'null.png') } alt="" style={{ width : '80%' }} />
@@ -136,7 +167,8 @@ const Player = () => {
                 </Col>
                 
                 <Col span={3} offset={3} className='my-auto lead-col'>
-                    <div className='icon-custom' onClick={_ => setVolume(0)} >
+                    <Icon type='unordered-list' onClick={_ => setDraw(true)} style={{ color : '#fff', margin : 'auto 1em', fontSize : '1rem' }} />
+                    <div className='icon-custom' onClick={_ => setVolume(e => e ? 0 : 100)} >
                         {   
                         !Volume ? <Custom.NoVolume /> : Volume > 0.5 ? <Custom.FullVolume/> : <Custom.HalfVolume/>
                         }
@@ -146,6 +178,32 @@ const Player = () => {
                     </div> 
                 </Col>
             </Row>
+
+            <Drawer
+                title="Playlist"
+                placement="right"
+                closable={false}
+                onClose={_ => setDraw(false)}
+                visible={Draw}
+                width={374}
+                >
+                    <List
+                    size="large"
+                    dataSource={Playlist}
+                    renderItem={(item, index) => 
+                    <><List.Item style={{ justifyContent : 'space-between' }} >
+                        <div style={{ display : 'flex' }} >
+                            <img src={files.thumbnail(item.thumbnail)} alt='' style={{ width : '4rem' }} />
+                            <Paragraph style={{ margin : 'auto 0.3em' }}>
+                                <Text strong style={{ wordBreak : 'break-all' }} >{ item.title }</Text>
+                                <br />  
+                                { item.artist_name }
+                            </Paragraph>
+                        </div>
+                        { Current !== index ? <Button type='danger' icon='delete' shape='circle' size='large' onClick={_=> Control.delete(item.id)} /> : ''}
+                    </List.Item></>}
+                    />
+            </Drawer>
         </React.Fragment>
     )
 

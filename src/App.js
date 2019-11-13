@@ -9,13 +9,17 @@ import Nav from './components/Nav'
 import Side from './components/Sidebar/Side'
 import Player from './components/Player'
 
-import Home from './pages/Home'
 import AdminDashboard from './pages/AdminDashboard'
 import Account from './pages/Account'
-import Pricing from './pages/Pricing'
+import Home from './pages/Home'
 import Album from './pages/Album'
 import Genre from './pages/Genre'
 import Trending from './pages/Trending'
+import Pricing from './pages/Pricing'
+import Faq from './pages/faq'
+import Contact from './pages/contact'
+import Terms from './pages/terms'
+import Policy from './pages/policy'
 
 import { auth } from './services'
 import { Layout } from 'antd'
@@ -57,14 +61,21 @@ const App = () => {
 					<Content style={{backgroundColor : '#222'}}>
 						<Switch>
 							<Route path="/home" component={Home} />
-							<Route path="/admin" component={AdminDashboard} />
-							<Route path="/account" component={Account} />
-							<Route path="/pricing" component={Pricing} />
+
 							<Route path="/album" component={Album} />
 							<Route path="/genre" component={Genre} />
 							<Route path="/trending" component={Trending} />
+
+							<Route path="/pricing" component={Pricing} />
+							<Route path="/faq" component={Faq} />
+							<Route path="/contact" component={Contact} />
 							
-							<Route path="/faq" render={_=> ('ini faq') } />
+							<Route path="/policy" component={Policy} />
+							<Route path="/terms" component={Terms} />
+
+							<Route path="/admin" component={AdminDashboard} />
+							<Route path="/account" component={Account} />
+
 							<Redirect to='/home' />
 						</Switch>
 					</Content>

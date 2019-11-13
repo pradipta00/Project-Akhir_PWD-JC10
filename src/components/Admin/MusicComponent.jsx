@@ -40,7 +40,9 @@ const TableIndependent = props => {
     const [_album, set_album] = useState('')
     const [_genre, set_genre] = useState('')
 
-    const colProps = data => ([{ title : data, dataIndex : 'name' }, { title : 'Action', dataIndex : 'id', render : id => <Button type='danger' ghost onClick={ _ => { task.Delete(data, id).then( _ => props.refresh() ) }} >Delete</Button>, width : 80 }])
+    const colProps = data => ([
+        { title : data, dataIndex : 'name', sorter: (a, b) => a.name.length - b.name.length }, 
+        { title : 'Action', dataIndex : 'id', render : id => <Button type='danger' ghost onClick={ _ => { task.Delete(data, id).then( _ => props.refresh() ) }} >Delete</Button>, width : 80 }])
 
     let listArtist = _ => (
     <Row gutter={4} >

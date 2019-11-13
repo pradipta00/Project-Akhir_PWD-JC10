@@ -1,42 +1,115 @@
 import React, { useEffect, useState } from 'react'
-import { Row, Col, Table, Typography, Button, Popconfirm, message } from 'antd'
-import { auth, files } from '../../services'
+
+import { Row, Col, Typography } from 'antd'
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+
+import { auth } from '../../services'
 
 const { Title } = Typography
+
 const Main = () => {
 
+    const [Transaction, setTransaction] = useState([])
+    const [Users, setUsers] = useState([])
+    const [dailyViews, setdailyViews] = useState([])
+    const [monthlyViews, setmonthlyViews] = useState([])
+
     useEffect(() => {
-        refresh()
+        auth.get('transactionCount').then( res => setTransaction(res.data) )
+        auth.get('usersCount').then( res => setUsers(res.data) )
+        auth.get('dailyViews').then( res => setdailyViews(res.data) )
+        auth.get('monthlyViews').then( res => setmonthlyViews(res.data) )
     }, [])
 
-    const [Users, setUsers] = useState([])
-    const [Transaction, setTransaction] = useState([])
+    const month = [null, 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
 
-    let refresh = _ => {
-        auth.get('users').then(res => setUsers(res.data)).catch(err => console.trace(err))
-        auth.get('transaction').then(res => setTransaction(res.data)).catch(err => console.trace(err))
-    }
-
-    let confirmTransaction = (id, userId, type) => {
-        auth.update({table : 'transaction', id, userId, type})
-        .then( res => {
-            if (res.error) message.error('Failed to update. ' + res.message)
-            else message.success('User is now a premium')
-        }).catch( err => console.trace(err) ).then(_=>refresh())
-    }
+    const data = arr => arr.map(item => {
+        let result = {};
+        for (const [key, value] of Object.entries(item)) {
+            if (key === 'Month')
+                result[key] = month[value]
+            else result[key] = value
+        }
+        return result
+    })
 
     return (
         <>
             <Row style={{ padding : '3rem 0' }} >
-                <Col span={16} offset={4} >
-                    <Title level={3}>Users Table</Title>
-                    <Table rowKey='id' columns={users} dataSource={Users} 
-                    style={{ backgroundColor : '#fff' }} />
+                <Col span={10} offset={1} >
+                    <Title level={3}>Transaction Chart</Title>
+                    <BarChart
+                        width={600}
+                        height={500}
+                        data={data(Transaction)}
+                        margin={{
+                        top: 20, right: 30, left: 20, bottom: 5,
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="5 5" />
+                        <XAxis dataKey="Month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar maxBarSize={100} dataKey="Transaction" stackId="a" fill="#81f4e1" />
+                    </BarChart>
                 </Col>
-                <Col span={16} offset={4} >
-                    <Title level={3}>Transaction Table</Title>
-                    <Table rowKey='id' columns={transaction} dataSource={Transaction} 
-                    style={{ backgroundColor : '#fff', maxWidth : '100%' }} />
+
+                <Col span={10} offset={1} >
+                    <Title level={3}>User Chart</Title>
+                    <BarChart
+                        width={600}
+                        height={500}
+                        data={data(Users)}
+                        margin={{
+                        top: 20, right: 30, left: 20, bottom: 5,
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="5 5" />
+                        <XAxis dataKey="Roles" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar maxBarSize={100} dataKey="Total" stackId="a" fill="#56cbf9" />
+                    </BarChart>
+                </Col>
+
+                <Col span={10} offset={1} >
+                    <Title level={3}>Daily Views Chart</Title>
+                    <BarChart
+                        width={600}
+                        height={500}
+                        data={data(dailyViews)}
+                        margin={{
+                        top: 20, right: 30, left: 20, bottom: 5,
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="5 5" />
+                        <XAxis dataKey="Date" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar maxBarSize={100} dataKey="Total" stackId="a" fill="#ff729f" />
+                    </BarChart>
+                </Col>
+
+                <Col span={10} offset={1} >
+                    <Title level={3}>Monthly Views Chart</Title>
+                    <BarChart
+                        width={600}
+                        height={500}
+                        data={data(monthlyViews)}
+                        margin={{
+                        top: 20, right: 30, left: 20, bottom: 5,
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="5 5" />
+                        <XAxis dataKey="Month" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Bar maxBarSize={100} dataKey="Total" stackId="a" fill="#f17300" />
+                    </BarChart>
                 </Col>
             </Row>
         </>

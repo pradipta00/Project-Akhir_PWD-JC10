@@ -11,6 +11,7 @@ const Album = () => {
     /* eslint-disable */
     const [activeItemIndex1, setActiveItemIndex1] = useState(0);
     const [activeItemIndex2, setActiveItemIndex2] = useState(0);
+    const [activeItemIndex3, setActiveItemIndex3] = useState(0);
     /* eslint-enable */
 
     const [Width, setWidth] = useState(0)
@@ -50,8 +51,6 @@ const Album = () => {
         leftChevron :  <Button shape="circle"><Icon type="left" /></Button> 
     })
 
-    let detailShow = (id, name) => setShow([id, name])
-
     if ( Show ) return (
         <MusicList id={Show[0]} name={Show[1]} dismiss={_ => setShow(false)} type='Album' />
     )
@@ -66,8 +65,8 @@ const Album = () => {
                         <CCard data={item} key={item.id} type='music' />
                     )) }
                 </ItemsCarousel>
-
-            <h1 className='montserrat myTitle' >Today Hits</h1>
+            
+            {  LIST.Today.length ? <h1 className='montserrat myTitle' >Today Hits</h1> : ''}
                 <ItemsCarousel { ...carouselProps(2) } >
                 { LIST.Today.map(item => (
                         <CCard data={item} key={item.id} type='music' />
@@ -75,7 +74,7 @@ const Album = () => {
                 </ItemsCarousel>
 
             <h1 className='montserrat myTitle' >This Month Top Tier</h1>
-                <ItemsCarousel { ...carouselProps(2) } >
+                <ItemsCarousel { ...carouselProps(3) } >
                 { LIST.Month.map(item => (
                         <CCard data={item} key={item.id} type='music' />
                     )) }

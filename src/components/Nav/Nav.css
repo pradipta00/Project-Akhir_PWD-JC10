@@ -18,6 +18,9 @@
     height : 65%;
     border-radius: 0px;
 }
+.input-1 input:hover {
+    cursor: default !important;
+}
 
 .input-1 > input {
     background-color: #cfcfcf;

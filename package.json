@@ -18,7 +18,8 @@
     "react-howler": "^3.7.4",
     "react-items-carousel": "^2.8.0",
     "react-router-dom": "^5.0.1",
-    "react-scripts": "3.1.2"
+    "react-scripts": "3.1.2",
+    "recharts": "^1.8.5"
   },
   "scripts": {
     "start": "react-app-rewired start",

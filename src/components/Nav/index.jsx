@@ -73,14 +73,14 @@ const Nav = (props) => {
         <div>
             { RedirToThis ? <Redirect to={RedirToThis} /> : '' }
             <Row type='flex' justify="space-between">
-                <Col lg={8} sm={10} xs={12} className="d-flex j-cont-l ai-c ">
+                <Col lg={8} sm={10} xs={12} className="d-flex j-cont-l ai-c">
                     <Button type="link" onClick={props.hide}>
                         <Icon type={props.status ? 'swap' : 'menu'} className="burger" />
                     </Button>
                 <img src={logo} alt="" className="Logo" onClick={_=> setRedirToThis('/home')} width={100} />
                 </Col>
                 <Col lg={8} sm={4} xs={0} >
-                    <Input 
+                    <Input style={{ opacity : 0 }}
                         suffix={<Icon type="search" />}
                         type="text" placeholder="Find your music" className="input-1" />
                 </Col>

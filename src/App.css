@@ -68,4 +68,5 @@ padding-left : 10px !important;
 
 .ant-list-item-meta-content { margin : auto }
 
-.ant-list-item:hover { background-color: #454545 !important; }
+.ant-list-item.list-music:hover { background-color: #454545 !important ; }
+.ant-list-item:hover { background-color: #ebebeb; }

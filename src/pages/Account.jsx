@@ -30,12 +30,14 @@ const Account = () => {
         auth.delete({id : User.id, table : 'users'}).then(res => {
             new Cookies().remove('auth')
             setUser(false)
-            setRedir('/')
-            notification['warning']({
-                message : 'Goodbye',
-                description : 'Your account has been deleted. We are so sorry to see you go like this. But keep in touch with us, ok?',
-                duration : 10
-            })
+            setTimeout(_ => {
+                setRedir('/home')
+                notification['warning']({
+                    message : 'Goodbye',
+                    description : 'Your account has been deleted. We are so sorry to see you go like this. But keep in touch with us, ok?',
+                    duration : 10
+                })
+            }, 200)
         }) 
     }
 

@@ -57,7 +57,7 @@ const Side = props => {
 
 				<Menu.Divider className="missing" />
 				
-				<Menu.Item key='admin' className='missing link-item'>Privacy Policy</Menu.Item>
+				<Menu.Item key='policy' className='missing link-item'>Privacy Policy</Menu.Item>
 				<Menu.Item key='terms' className='missing link-item'>Terms Of Use</Menu.Item>
 				<p className='missing browse2 link-item'>&copy; 2019 Soox.</p>
 				<p className='missing browse2 link-item'>All Rights Reserved</p>

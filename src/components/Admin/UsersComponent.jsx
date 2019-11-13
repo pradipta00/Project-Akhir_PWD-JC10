@@ -51,7 +51,11 @@ const Main = () => {
         {
             title : 'Username',
             dataIndex : 'userId',
-            render : id => Users.length ? Users.find(item=>item.id===id)['username'] : ''
+            render : id => {
+                if (Users.length) 
+                    var user = Users.find(item => item.id === id);
+                return user ? user['username'] : 'User not found / Deleted'
+            }
         },
         {
             title : 'Files',
