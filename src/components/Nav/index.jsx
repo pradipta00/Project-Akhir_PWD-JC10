@@ -9,7 +9,7 @@ import { GlobalState } from '../../Core'
 import Login from '../Login'
 import Register from '../Register'
 
-import './Nav.css'
+import './Nav.sass'
 
 const Nav = (props) => {
 

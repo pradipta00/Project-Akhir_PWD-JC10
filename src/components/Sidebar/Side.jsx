@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { Menu, Icon } from 'antd'
-import './Side.css'
+import './Side.sass'
 
 const Side = props => {
 

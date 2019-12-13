@@ -36,8 +36,9 @@ const Register = props => {
 	
 	let sendRegister = _ => {
 		setErrorUser(false); setErrorEmail(false);
-
+		console.log('called')
 		auth.Register(Data).then(response => { 
+			console.log(response)
 			if( response.success ){
 				props.success(); props.dismiss();
 				message.success("Account Created!");

@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom'
 import { Cookies } from 'react-cookie'
 
 import { GlobalState } from './Core'
-import './App.css'
+import './App.scss'
 
 import Nav from './components/Nav'
 import Side from './components/Sidebar/Side'

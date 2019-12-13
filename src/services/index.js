@@ -2,14 +2,6 @@ const axios = require('axios');
 const mainLink = 'http://localhost:8080/'
 
 const auth = {
-    Register : data => {
-        return new Promise((resolve, reject) => {
-            axios.post(mainLink + 'auth/register', data)
-            .then( res => resolve(res.data) )
-            .catch( err => reject(err) )
-        });    
-    },
-    
     Login : data => {
        return new Promise((resolve , reject) => {
             axios.post(mainLink + 'auth/login', data)
@@ -41,10 +33,18 @@ const auth = {
             .catch( err => reject(err) )
         })
     },
+
+    Register : data => {
+        return new Promise((resolve, reject) => {
+            axios.post(mainLink + 'user/register', {...data, table : 'users'})
+            .then( res => resolve(res.data) )
+            .catch( err => reject(err) )
+        });    
+    },
     
     transaction : data => {
         return new Promise((resolve, reject) => {
-            axios.post( mainLink + 'auth/transaction' , data)
+            axios.post( mainLink + 'user/transaction' , {...data, table : 'transaction'})
             .then( res => resolve(res) )
             .catch( err => reject(err) )
         })
@@ -52,7 +52,7 @@ const auth = {
 
     get : (data, id = 'userId') => {
         return new Promise((resolve, reject) => {
-            axios.get( mainLink + `auth/get?table=${data}&id=${id}`)
+            axios.get( mainLink + `user/get?table=${data}&id=${id}`)
             .then( res => resolve(res) )
             .catch( err => reject(err) )
         })
@@ -60,7 +60,7 @@ const auth = {
 
     update : data => {
         return new Promise((resolve, reject) => {
-            axios.post( mainLink + 'auth/update', data)
+            axios.post( mainLink + 'user/update', data)
             .then( res => resolve(res) )
             .catch( err => reject(err) )
         })
@@ -68,7 +68,7 @@ const auth = {
     
     delete : data => {
         return new Promise((resolve, reject) => {
-            axios.delete( mainLink + 'auth/delete', { params : data })
+            axios.delete( mainLink + 'user/delete', { params : data })
             .then( res => resolve(res) )
             .catch( err => reject(err) )
         })
@@ -76,27 +76,27 @@ const auth = {
 }
 
 const music = {
-    Get : (table, id='', albumId) => {
+    Get : (table, id='id', albumId) => {
         return new Promise((resolve, reject) => {
-            axios.get( mainLink + `music/get`, { params : { table, id, albumId } } ).then(res => resolve(res.data)).catch(err => reject(err))
+            axios.get( mainLink + `data/get`, { params : { table, id, albumId } } ).then(res => resolve(res.data)).catch(err => reject(err))
         })
     },
 
     Insert : data => {
         return new Promise((resolve, reject) =>{
-            axios.post( mainLink + 'music/insert', data ).then( res => resolve(res) ).catch( err => reject(err) )
+            axios.post( mainLink + 'data/insert', data ).then( res => resolve(res) ).catch( err => reject(err) )
         })
     },
 
     Delete : data => {
         return new Promise((resolve , reject) => {
-            axios.delete( mainLink + 'music/delete', { params : data} ).then(res => resolve(res)).catch( err => reject(err))
+            axios.delete( mainLink + 'data/delete', { params : data} ).then(res => resolve(res)).catch( err => reject(err))
         })
     },
 
     Update : data => {
         return new Promise((resolve, reject) => {
-            axios.post(mainLink + 'music/update', data).then( res => resolve(res) ).catch( err => reject(err) )
+            axios.post(mainLink + 'data/update', data).then( res => resolve(res) ).catch( err => reject(err) )
         })
     }
 }

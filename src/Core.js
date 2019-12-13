@@ -25,16 +25,17 @@ const Core = () => {
     
     useEffect(() => {
         // Refresh Limiter
-        if (User.roles === 'rakyat') 
-        auth.get('limit', User.id).then(res => {
-            if (res.data[0].total > dailyLimit-1) setUser(e => ({ ...e, limit : true }))
-        }).catch(err => console.log(err, 'err'))
+        if (User && User.roles === 'rakyat') 
+            auth.get('limit', User.id).then(res => {
+                if (res.data.length && res.data[0].total > dailyLimit-1) setUser(e => ({ ...e, limit : true }))
+            }).catch(err => console.log(err, 'err'))
 
     }, [Playlist, User])
 
     useEffect(() => {
         if ( User && moment(User.premiumend).isBefore( new Date() ) ) {
-            auth.update({ table : 'premiumend', id : User.id }).then(res => {refreshUser(); console.log('jalannn')}).catch(err => console.log(err))
+            if (User.roles !== "presiden")
+                auth.update({ table : 'premiumend', id : User.id }).then(res => {refreshUser(); console.log('jalannn')}).catch(err => console.log(err))
         }
     }, [User])
 

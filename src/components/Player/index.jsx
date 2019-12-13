@@ -6,7 +6,7 @@ import moment from 'moment'
 
 import { GlobalState } from '../../Core'
 import { files, music } from '../../services'
-import './Player.css'
+import './Player.sass'
 
 const { Paragraph, Text } = Typography
 
